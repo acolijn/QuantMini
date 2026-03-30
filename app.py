@@ -1,7 +1,7 @@
 """
 Quantum Physics Interactive Web App
 ====================================
-Run with:  conda run -n base streamlit run app.py
+Run with:  streamlit run app.py
 """
 
 import streamlit as st
