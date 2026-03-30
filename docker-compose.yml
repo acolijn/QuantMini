@@ -1,0 +1,7 @@
+services:
+  kwantumfysica:
+    build: .
+    container_name: kwantumfysica
+    restart: unless-stopped
+    ports:
+      - "8501:8501"
