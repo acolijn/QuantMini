@@ -9,7 +9,7 @@ COPY . .
 
 EXPOSE 8502
 
-HEALTHCHECK CMD python -c "import urllib.request; urllib.request.urlopen('http://localhost:8501/_stcore/health')" || exit 1
+HEALTHCHECK CMD python -c "import urllib.request; urllib.request.urlopen('http://localhost:8502/_stcore/health')" || exit 1
 
 ENTRYPOINT ["streamlit", "run", "app.py", \
     "--server.port=8502", \
