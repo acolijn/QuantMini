@@ -1,0 +1,45 @@
+body {
+    background: #f7f9fb;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+.container {
+    max-width: 600px;
+    margin: 60px auto;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+    padding: 40px 32px 32px 32px;
+    text-align: center;
+}
+.subtitle {
+    color: #555;
+    margin-bottom: 32px;
+}
+.section {
+    margin-bottom: 36px;
+}
+.section h2 {
+    color: #2a4d8f;
+    margin-bottom: 16px;
+}
+.app-link {
+    display: inline-block;
+    margin: 8px 12px;
+    padding: 12px 28px;
+    background: #2a4d8f;
+    color: #fff;
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: 1.1em;
+    transition: background 0.2s;
+}
+.app-link:hover {
+    background: #1b2e4b;
+}
+.relativity {
+    border-bottom: 1px solid #e0e6ed;
+    padding-bottom: 24px;
+    margin-bottom: 32px;
+}
