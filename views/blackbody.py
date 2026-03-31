@@ -81,7 +81,9 @@ def render():
                 "Het totale uitgestraalde vermogen per oppervlakte-eenheid van een zwart lichaam "
                 "volgt uit integratie van de Planck-curve over alle golflengtes:"
             )
-            st.latex(r"M = \sigma T^4, \quad \sigma = 5{,}670 \times 10^{-8}\ \text{W m}^{-2}\text{K}^{-4}")
+            st.latex(r"M = \sigma T^4")
+            st.markdown("waarbij de Stefan-Boltzmannnconstante $\\sigma$ volledig uitgedrukt kan worden in fundamentele constanten:")
+            st.latex(r"\sigma = \frac{2\pi^5 k_B^4}{15\, h^3 c^2} = 5{,}670 \times 10^{-8}\ \text{W m}^{-2}\text{K}^{-4}")
             st.markdown(
                 f"Bij **T = {T} K**: $M = {data['power']/1e6:.2f}$ MW/m² — "
                 "merk op hoe snel dit groeit met temperatuur ($T^4$)."

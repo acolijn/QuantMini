@@ -69,8 +69,8 @@ def plot_schema(data, d, lam, L, a, waarneming):
                     (-(slit_half - gap), (slit_half - gap)),
                     ((slit_half + gap), 8.5)]:
         ax.plot([sx, sx], [y0, y1], color="#333333", lw=2, solid_capstyle="butt")
-    ax.text(sx - 0.55, slit_half + gap + 0.4, r"$S_1$", ha="right", fontsize=8)
-    ax.text(sx - 0.55, -(slit_half + gap + 0.4), r"$S_2$", ha="right", fontsize=8)
+    ax.text(sx - 0.55, slit_half + gap + 0.4, "S1", ha="right", fontsize=8)
+    ax.text(sx - 0.55, -(slit_half + gap + 0.4), "S2", ha="right", fontsize=8)
 
     # Detector (if observing)
 
@@ -104,7 +104,10 @@ def plot_schema(data, d, lam, L, a, waarneming):
     ax.fill_betweenx(y_draw, scr, xpat, alpha=0.45, color=color)
     ax.plot(xpat, y_draw, color="darkorange", lw=1.0)
 
-    plt.tight_layout()
+    try:
+        fig.tight_layout()
+    except Exception:
+        pass
     return fig
 
 
@@ -152,5 +155,8 @@ def plot_intensity(data, waarneming):
     ax.set_ylim(0, 1.05)
     ax.legend(fontsize=LEGEND_FONTSIZE)
     ax.grid(True, alpha=GRID_ALPHA)
-    plt.tight_layout(rect=[0, 0, 1, 0.90])
+    try:
+        fig.tight_layout(rect=[0, 0, 1, 0.90])
+    except Exception:
+        pass
     return fig
