@@ -5,7 +5,7 @@ E = 1.602e-19   # Elementary charge (C)
 
 # Shared plot style
 FIGSIZE_WIDE   = (10, 5)   # standard data plots
-FIGSIZE_SCHEMA = (8, 6)    # schematic diagram
+FIGSIZE_SCHEMA = (2.5, 1.8)  # schematic diagram
 LABEL_FONTSIZE  = 12
 TITLE_FONTSIZE  = 13
 LEGEND_FONTSIZE = 10

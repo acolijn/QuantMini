@@ -9,30 +9,6 @@ from physics import double_slit as ds
 def render():
     st.title("Het dubbele-spleten experiment")
 
-    # ── Theory expander ──
-    with st.expander("\U0001f4d6 Theorie", expanded=False):
-        st.markdown(r"""
-Het dubbele-spleten experiment demonstreert **golf-deeltje dualiteit**.
-Zonder waarneming bij de spleten zien we een interferentiepatroon;
-met waarneming twee pieken.
-
-Intensiteit op het scherm (dubbele spleet + enkelspleet omhullende):
-
-$$I(y) = I_0\left(\frac{\sin\beta}{\beta}\right)^2\cos^2\!\delta$$
-
-met:
-
-$$\beta = \frac{\pi a\, y}{\lambda L},\qquad \delta = \frac{\pi d\, y}{\lambda L}$$
-
-De **fringe-afstand** (afstand tussen maxima) is:
-
-$$\Delta y = \frac{\lambda L}{d}$$
-
-De **de Broglie-golflengte** van een deeltje met massa $m$ en snelheid $v$:
-
-$$\lambda = \frac{h}{mv}$$
-        """)
-
     # ── Sidebar controls ──
     st.sidebar.markdown("---")
     st.sidebar.subheader("\u2699\ufe0f Parameters")
@@ -41,9 +17,6 @@ $$\lambda = \frac{h}{mv}$$
     lam_nm = st.sidebar.slider("Golflengte \u03bb (nm)", 400, 700, 500, 10)
     L_m = st.sidebar.slider("Schermafstand L (m)", 0.5, 3.0, 1.0, 0.1)
     a_um = st.sidebar.slider("Spleetbreedte a (\u00b5m)", 10, 100, 30, 5)
-
-    st.sidebar.subheader("\U0001f39b\ufe0f Weergave")
-    waarneming = st.sidebar.toggle("Waarneming (deeltjesgedrag)", value=False)
 
     d = d_mm * 1e-3
     lam = lam_nm * 1e-9
@@ -55,41 +28,88 @@ $$\lambda = \frac{h}{mv}$$
 
     # ── Tabs ──
     tab1, tab2 = st.tabs([
-        "\U0001f5bc\ufe0f Schematisch overzicht",
         "\U0001f4ca Intensiteitspatroon",
+        "\U0001f4d6 Theorie",
     ])
 
-    with tab1:
-        col_fig, col_info = st.columns([2, 1])
-        with col_fig:
-            fig_s = ds.plot_schema(data, d, lam, L, a, waarneming)
-            st.pyplot(fig_s)
-            plt.close(fig_s)
-        with col_info:
-            st.markdown("#### Experimentele parameters")
+    with tab2:
+        col_l, col_r = st.columns([1, 1])
+        with col_l:
+            st.markdown("### Golf-deeltje dualiteit")
+            st.markdown(
+                "Richard Feynman noemde het dubbele-spleten experiment "
+                "'het enige mysterie van de kwantummechanica'. "
+                "Zonder waarneming bij de spleten gedraagt een deeltje "
+                "zich als een golf en ontstaat een **interferentiepatroon**. "
+                "Zodra we meten door welke spleet het deeltje gaat, "
+                "verdwijnt de interferentie en zien we twee klassieke pieken."
+            )
+            st.markdown("### Intensiteitspatroon")
+            st.markdown(
+                "De intensiteit op het scherm is het product van de "
+                "enkelspleet-omhullende en de dubbelspleet-cosinusfactor:"
+            )
+            st.latex(
+                r"I(y) = I_0\left(\frac{\sin\beta}{\beta}\right)^2\cos^2\!\delta"
+            )
+            st.markdown("met")
+            st.latex(
+                r"\beta = \frac{\pi a\, y}{\lambda L}, \qquad"
+                r"\delta = \frac{\pi d\, y}{\lambda L}"
+            )
+            st.markdown(
+                r"waarbij $a$ de spleetbreedte, $d$ de spleetafstand en "
+                r"$L$ de afstand tot het scherm is."
+            )
+        with col_r:
+            st.markdown("### Fringe-afstand")
+            st.markdown(
+                "De afstand tussen opeenvolgende heldere maxima (fringes) is:"
+            )
+            st.latex(r"\Delta y = \frac{\lambda L}{d}")
+            st.markdown(
+                r"Een **grotere golflengte** of **grotere schermafstand** "
+                r"geeft bredere fringes; een **grotere spleetafstand** "
+                r"geeft smallere fringes."
+            )
+            st.markdown("### De Broglie-golflengte")
+            st.markdown(
+                "Ook massieve deeltjes (elektronen, neutronen, moleculen) "
+                "hebben een golflengte:"
+            )
+            st.latex(r"\lambda = \frac{h}{mv}")
+            st.markdown(
+                r"met $h = 6.626 \times 10^{-34}$ J·s de constante van Planck, "
+                r"$m$ de massa en $v$ de snelheid van het deeltje."
+            )
+            st.markdown("### Actuele parameterwaarden")
             st.markdown(f"""
 | Parameter | Waarde |
 |-----------|--------|
 | Spleetafstand $d$ | {d_mm} mm |
 | Golflengte $\\lambda$ | {lam_nm} nm |
 | Schermafstand $L$ | {L_m} m |
-| Spleetbreedte $a$ | {a_um} \u00b5m |
+| Spleetbreedte $a$ | {a_um} µm |
 | Fringe-afstand $\\Delta y$ | {data['dy_fringe']*1e3:.3f} mm |
             """)
 
-            if waarneming:
-                st.info("\U0001f441\ufe0f **Waarneming aan**: het deeltje gedraagt zich "
-                        "als een klassiek deeltje \u2014 twee pieken.")
-            else:
-                st.success("\U0001f30a **Waarneming uit**: interferentiepatroon "
-                           "door golfgedrag.")
+    with tab1:
+        sch_l, sch_r = st.columns(2)
+        with sch_l:
+            fig_s0 = ds.plot_schema(data, d, lam, L, a, waarneming=False)
+            st.pyplot(fig_s0, use_container_width=False)
+            plt.close(fig_s0)
+        with sch_r:
+            fig_s1 = ds.plot_schema(data, d, lam, L, a, waarneming=True)
+            st.pyplot(fig_s1, use_container_width=False)
+            plt.close(fig_s1)
 
-    with tab2:
-        fig_i = ds.plot_intensity(data, waarneming)
+        fig_i = ds.plot_intensity(data, False)
         st.pyplot(fig_i)
         plt.close(fig_i)
 
         c1, c2, c3 = st.columns(3)
-        c1.metric("Fringe-afstand \u0394y", f"{data['dy_fringe'] * 1e3:.3f} mm")
+#        c1.metric("Fringe-afstand \u0394y", f"{data['dy_fringe'] * 1e3:.3f} mm")
+        c1.metric("Fringe-afstand $\Delta y$", f"{data['dy_fringe'] * 1e3:.3f} mm")
         c2.metric("Golflengte \u03bb", f"{lam_nm} nm")
         c3.metric("Spleetafstand d", f"{d_mm} mm")

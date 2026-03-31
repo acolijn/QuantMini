@@ -120,7 +120,7 @@ def plot_metals():
     ax.set_xlabel(r"Frequentie $\nu$ (Hz)", fontsize=LABEL_FONTSIZE)
     ax.set_ylabel(r"$V_\mathrm{stop}$ (V)", fontsize=LABEL_FONTSIZE)
     ax.set_title(
-        r"Foto-elektrisch effect voor verschillende metalen  (helling $h/e$ is universeel)",
+        r"Verschillende metalen  (helling $h/e$ is universeel)",
         fontsize=TITLE_FONTSIZE,
     )
     ax.legend(fontsize=LEGEND_FONTSIZE)
