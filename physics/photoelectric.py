@@ -4,7 +4,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy.stats import linregress
 
-from config import H, E, METALS, METAL_COLORS
+from config import H, E, METALS, METAL_COLORS, FIGSIZE_WIDE, LABEL_FONTSIZE, TITLE_FONTSIZE, LEGEND_FONTSIZE, GRID_ALPHA
 
 
 def compute(W_eV, noise_level):
@@ -40,7 +40,7 @@ def plot_main(data, title, show_extrap, show_fit):
     d = data
     y_max = max(d["V_meas"].max(), d["V_physical"].max()) * 1.25
 
-    fig, ax = plt.subplots(figsize=(11, 6))
+    fig, ax = plt.subplots(figsize=FIGSIZE_WIDE)
 
     # Shaded regions
     ax.axvspan(0, d["nu_c"], alpha=0.13, color="gray")
@@ -89,11 +89,11 @@ def plot_main(data, title, show_extrap, show_fit):
 
     ax.set_xlim(0, max(d["nu_full"]))
     ax.set_ylim(-0.15, y_max)
-    ax.set_xlabel(r"$\nu$ (Hz)", fontsize=13)
-    ax.set_ylabel(r"$V_\mathrm{stop}$ (V)", fontsize=13)
-    ax.set_title(title, fontsize=14, fontweight="bold")
-    ax.legend(loc="upper left", fontsize=10)
-    ax.grid(True, alpha=0.3)
+    ax.set_xlabel(r"$\nu$ (Hz)", fontsize=LABEL_FONTSIZE)
+    ax.set_ylabel(r"$V_\mathrm{stop}$ (V)", fontsize=LABEL_FONTSIZE)
+    ax.set_title(title, fontsize=TITLE_FONTSIZE, fontweight="bold")
+    ax.legend(loc="upper left", fontsize=LEGEND_FONTSIZE)
+    ax.grid(True, alpha=GRID_ALPHA)
     plt.tight_layout()
     return fig
 
@@ -102,7 +102,7 @@ def plot_metals():
     """Create the metals comparison figure."""
     nu_range = np.linspace(0, 13e14, 500)
 
-    fig, ax = plt.subplots(figsize=(11, 5))
+    fig, ax = plt.subplots(figsize=FIGSIZE_WIDE)
     ax.axhline(y=0, color="black", lw=1)
     ax.axvspan(4.0e14, 7.9e14, alpha=0.07, color="gold")
     ax.text(5.95e14, 3.3, "Zichtbaar licht",
@@ -117,13 +117,13 @@ def plot_metals():
 
     ax.set_xlim(0, 13e14)
     ax.set_ylim(-0.1, 3.7)
-    ax.set_xlabel(r"Frequentie $\nu$ (Hz)", fontsize=13)
-    ax.set_ylabel(r"$V_\mathrm{stop}$ (V)", fontsize=13)
+    ax.set_xlabel(r"Frequentie $\nu$ (Hz)", fontsize=LABEL_FONTSIZE)
+    ax.set_ylabel(r"$V_\mathrm{stop}$ (V)", fontsize=LABEL_FONTSIZE)
     ax.set_title(
         r"Foto-elektrisch effect voor verschillende metalen  (helling $h/e$ is universeel)",
-        fontsize=12,
+        fontsize=TITLE_FONTSIZE,
     )
-    ax.legend(fontsize=10)
-    ax.grid(True, alpha=0.3)
+    ax.legend(fontsize=LEGEND_FONTSIZE)
+    ax.grid(True, alpha=GRID_ALPHA)
     plt.tight_layout()
     return fig

@@ -49,8 +49,8 @@ De helling $h/e$ is **universeel** — onafhankelijk van het metaal.
     noise_level = st.sidebar.slider("Meetruis (V)", 0.00, 0.20, 0.04, 0.01)
 
     st.sidebar.subheader("\U0001f39b\ufe0f Weergave")
-    show_extrap = st.sidebar.checkbox("Toon extrapolatie", value=True)
-    show_fit = st.sidebar.checkbox("Toon lineaire fit", value=True)
+    show_extrap = st.sidebar.toggle("Toon extrapolatie", value=True)
+    show_fit = st.sidebar.toggle("Toon lineaire fit", value=True)
 
     # ── Compute ──
     data = pe.compute(W_eV, noise_level)

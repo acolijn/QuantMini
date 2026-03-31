@@ -1,7 +1,15 @@
-"""Shared physical constants and material data."""
+"""Shared physical constants, material data, and plot style."""
 
 H = 6.626e-34   # Planck constant (J s)
 E = 1.602e-19   # Elementary charge (C)
+
+# Shared plot style
+FIGSIZE_WIDE   = (10, 5)   # standard data plots
+FIGSIZE_SCHEMA = (8, 6)    # schematic diagram
+LABEL_FONTSIZE  = 12
+TITLE_FONTSIZE  = 13
+LEGEND_FONTSIZE = 10
+GRID_ALPHA      = 0.3
 
 METALS = {
     "Cesium":    1.95,

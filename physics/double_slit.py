@@ -4,6 +4,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 
+from config import FIGSIZE_WIDE, FIGSIZE_SCHEMA, LABEL_FONTSIZE, TITLE_FONTSIZE, LEGEND_FONTSIZE, GRID_ALPHA
+
 
 def compute(d, lam, L, a):
     """Compute intensities for the double-slit experiment."""
@@ -33,7 +35,7 @@ def plot_schema(data, d, lam, L, a, waarneming):
     """Create the schematic side-view figure of the double-slit setup."""
     I_draw = data["I_particle"] if waarneming else data["I_wave"]
 
-    fig, ax = plt.subplots(figsize=(7, 6))
+    fig, ax = plt.subplots(figsize=FIGSIZE_SCHEMA)
     ax.set_xlim(0, 12)
     ax.set_ylim(-9.5, 9.5)
     ax.set_aspect("equal")
@@ -41,7 +43,7 @@ def plot_schema(data, d, lam, L, a, waarneming):
 
     title = ("Met waarneming (deeltjesgedrag)"
              if waarneming else "Zonder waarneming (golfgedrag)")
-    ax.set_title(title, fontsize=12, fontweight="bold")
+    ax.set_title(title, fontsize=TITLE_FONTSIZE, fontweight="bold")
 
     # Source
     ax.add_patch(patches.Circle((0.7, 0), 0.42, color="gold",
@@ -113,7 +115,7 @@ def plot_intensity(data, waarneming):
     y_mm = data["y"] * 1e3
     dy_fringe = data["dy_fringe"]
 
-    fig, ax = plt.subplots(figsize=(6, 6))
+    fig, ax = plt.subplots(figsize=FIGSIZE_WIDE)
 
     if waarneming:
         ax.plot(y_mm, data["I_particle"], color="firebrick", lw=2,
@@ -131,10 +133,10 @@ def plot_intensity(data, waarneming):
                 rf"$\Delta y = \lambda L/d = {dy_fringe*1e3:.2f}$ mm",
                 ha="center", fontsize=10)
 
-    ax.set_xlabel(r"Positie $y$ (mm)", fontsize=12)
-    ax.set_ylabel("Intensiteit (rel.)", fontsize=12)
+    ax.set_xlabel(r"Positie $y$ (mm)", fontsize=LABEL_FONTSIZE)
+    ax.set_ylabel("Intensiteit (rel.)", fontsize=LABEL_FONTSIZE)
     ax.set_ylim(0, 1.12)
-    ax.legend(fontsize=10)
-    ax.grid(True, alpha=0.3)
+    ax.legend(fontsize=LEGEND_FONTSIZE)
+    ax.grid(True, alpha=GRID_ALPHA)
     plt.tight_layout()
     return fig
