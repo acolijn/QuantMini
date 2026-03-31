@@ -37,16 +37,24 @@ def compute(T, noise=0.05):
     I_planck = planck(lam, T)
     I_rj     = rayleigh_jeans(lam, T)
 
-    # Fake measurement points: Planck + ~5% scatter, sparse over the main curve
-    rng = np.random.default_rng()
+    # Fake measurement points with Poisson statistics.
+    # The noise slider sets the fractional error at the peak (sigma/I_peak = noise).
+    # => N_peak = 1/noise^2.  At each wavelength N(lam) = N_peak * I(lam)/I_peak,
+    # sigma_N = sqrt(N), so sigma_I = I_peak / sqrt(N_peak) * sqrt(I/I_peak)
+    #                               = sqrt(I * I_peak / N_peak)  ∝ sqrt(I)
+    rng      = np.random.default_rng()
     lam_meas = np.linspace(lam_start, lam_end, 40)
-    I_meas   = planck(lam_meas, T) * (1 + rng.normal(0, noise, len(lam_meas)))
+    I_true   = planck(lam_meas, T)
+    I_peak   = I_planck.max()
+    N_peak   = max(1, 1.0 / noise**2)          # photons at peak
+    I_err    = np.sqrt(I_true * I_peak / N_peak)  # Poisson sigma [W/m²/sr/m]
+    I_meas   = I_true + rng.normal(0, 1, len(lam_meas)) * I_err  # scatter ~ sigma
 
     power = SIGMA * T**4  # total emitted power per unit surface [W/m²]
 
     return dict(
         lam=lam, I_planck=I_planck, I_rj=I_rj,
-        lam_meas=lam_meas, I_meas=I_meas, lam_peak=lam_peak, T=T,
+        lam_meas=lam_meas, I_meas=I_meas, I_err=I_err, lam_peak=lam_peak, T=T,
         power=power,
     )
 
@@ -79,10 +87,13 @@ def plot_spectrum(data, show_rj=True, show_meas=True, log_scale=False):
                 color="steelblue", lw=2, ls="--",
                 label="Rayleigh-Jeans (klassiek)", zorder=2)
 
-    # Fake measurements
+    # Fake measurements with error bars
     if show_meas:
-        ax.scatter(lam_m_disp, d["I_meas"] / 1e12,
-                   color="black", s=50, zorder=5, label="Meetpunten")
+        ax.errorbar(lam_m_disp, d["I_meas"] / 1e12,
+                    yerr=d["I_err"] / 1e12,
+                    fmt="o", color="black", ms=4, lw=0.8,
+                    elinewidth=0.8, capsize=2, capthick=0.8,
+                    zorder=5, label="Meetpunten")
 
     # Wien peak annotation
     y_top = 1.3 * d["I_planck"].max() / 1e12
