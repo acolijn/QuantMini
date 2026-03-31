@@ -126,7 +126,7 @@ def plot_metals():
     )
 
     for naam, W_eV in METALS.items():
-        nu_c = W_eV * E / H
+        nu_c = W_eV * E / H # cutoff frequency for this metal
         V = np.maximum((H * nu_range - W_eV * E) / E, 0)
         label = rf"{naam} ($W={W_eV}$ eV)"
         ax.plot(nu_range, V, color=METAL_COLORS[naam], lw=2.5, label=label)
