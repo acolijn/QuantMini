@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 from matplotlib.colors import LinearSegmentedColormap
 from scipy.stats import linregress
 
-from config import H, E, METALS, METAL_COLORS, FIGSIZE_WIDE, LABEL_FONTSIZE, TITLE_FONTSIZE, LEGEND_FONTSIZE, GRID_ALPHA
+from config import H, E, C, METALS, METAL_COLORS, FIGSIZE_WIDE, LABEL_FONTSIZE, TITLE_FONTSIZE, LEGEND_FONTSIZE, GRID_ALPHA
 
 
 def compute(W_eV, noise_level):
@@ -118,7 +118,7 @@ def plot_metals():
     ]
     rainbow_cmap = LinearSegmentedColormap.from_list("rainbow_vis", rainbow_colors)
     nu_vis_lo, nu_vis_hi = 4.28e14, 7.89e14
-    rainbow_img = np.linspace(0, 1, 256).reshape(1, -1)
+    rainbow_img = np.linspace(1, 0, 256).reshape(1, -1)  # reversed: violet@high-ν, red@low-ν
     ax.imshow(
         rainbow_img, cmap=rainbow_cmap, aspect="auto", alpha=0.22,
         extent=[nu_vis_lo, nu_vis_hi, -0.1, 3.7],
@@ -136,11 +136,36 @@ def plot_metals():
     ax.set_ylim(-0.1, 3.7)
     ax.set_xlabel(r"Frequentie $\nu$ (Hz)", fontsize=LABEL_FONTSIZE)
     ax.set_ylabel(r"$V_\mathrm{stop}$ (V)", fontsize=LABEL_FONTSIZE)
-    ax.set_title(
-        r"Verschillende metalen  (helling $h/e$ is universeel)",
-        fontsize=TITLE_FONTSIZE,
-    )
+
+
+    # Secondary wavelength axis at the top (lambda = c/nu, non-linear)
+    def nu_to_nm(nu):
+        with np.errstate(divide="ignore", invalid="ignore"):
+            safe = np.where(nu > 1e10, nu, 1e10)
+            return C / safe * 1e9
+
+    def nm_to_nu(lam_nm):
+        with np.errstate(divide="ignore", invalid="ignore"):
+            safe = np.where(lam_nm > 1e-3, lam_nm, 1e-3)
+            return C / (safe * 1e-9)
+
+    ax2 = ax.secondary_xaxis("top", functions=(nu_to_nm, nm_to_nu))
+    ax2.set_xlabel(r"Golflengte $\lambda$ (nm)", fontsize=LABEL_FONTSIZE)
+    # Explicit ticks at round wavelengths (hyperbolic scale — auto ticks won't work)
+    lam_ticks_nm = [230, 280, 350, 400, 500, 600, 750, 1000, 1500, 3000]
+    nu_for_ticks = [C / (l * 1e-9) for l in lam_ticks_nm]
+    # Only show ticks within the primary x-axis range
+    xlim = ax.get_xlim()
+    visible = [(nu, lam) for nu, lam in zip(nu_for_ticks, lam_ticks_nm)
+               if xlim[0] <= nu <= xlim[1]]
+    if visible:
+        ax2.set_xticks([nu_to_nm(nu) for nu, _ in visible])
+        ax2.set_xticklabels([str(lam) for _, lam in visible])
+
     ax.legend(fontsize=LEGEND_FONTSIZE)
     ax.grid(True, alpha=GRID_ALPHA)
-    plt.tight_layout()
+    try:
+        fig.tight_layout()
+    except Exception:
+        pass
     return fig

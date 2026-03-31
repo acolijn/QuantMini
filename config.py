@@ -2,6 +2,7 @@
 
 H = 6.626e-34   # Planck constant (J s)
 E = 1.602e-19   # Elementary charge (C)
+C = 2.998e8     # Speed of light (m/s)
 
 # Shared plot style
 FIGSIZE_WIDE   = (10, 5)   # standard data plots
@@ -20,9 +21,9 @@ METALS = {
 }
 
 METAL_COLORS = {
-    "Cesium":    "royalblue",
-    "Kalium":    "forestgreen",
-    "Natrium":   "firebrick",
-    "Aluminium": "darkorange",
-    "Koper":     "purple",
+    "Cesium":    "#4C72B0",
+    "Kalium":    "#55A868",
+    "Natrium":   "#DD8452",
+    "Aluminium": "#C44E52",
+    "Koper":     "#8172B3",
 }

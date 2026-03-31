@@ -127,7 +127,7 @@ def plot_spectrum(data, show_rj=True, show_meas=True, log_scale=False):
             (1.00, 0.00, 0.00),  # red     700 nm
         ]
         rainbow_cmap = LinearSegmentedColormap.from_list("vis", rainbow_colors)
-        gradient = np.linspace(0, 1, 256).reshape(1, -1)
+        gradient = np.linspace(0, 1, 256).reshape(1, -1)  # violet@380nm left → red@700nm right
         y_lo, y_hi = ax.get_ylim()
         ax.imshow(
             gradient, aspect="auto", cmap=rainbow_cmap, alpha=0.25,
