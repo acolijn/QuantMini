@@ -16,12 +16,13 @@ def render():
     T = st.sidebar.slider("Temperatuur T (K)", 100, 10000, 5778, 100)
 
     st.sidebar.subheader("🎛️ Weergave")
-    show_rj   = st.sidebar.toggle("Toon Rayleigh-Jeans (klassiek)", value=True)
-    show_meas = st.sidebar.toggle("Toon meetpunten", value=True)
-    log_scale = st.sidebar.toggle("Log schaal (y-as)", value=False)
+    show_rj    = st.sidebar.toggle("Toon Rayleigh-Jeans (klassiek)", value=True)
+    show_meas  = st.sidebar.toggle("Toon meetpunten", value=True)
+    log_scale  = st.sidebar.toggle("Log schaal (y-as)", value=False)
+    noise_level = st.sidebar.slider("Meetruis (%)", 0, 30, 5, 1)
 
     # ── Compute ──
-    data = bb.compute(T)
+    data = bb.compute(T, noise_level / 100)
 
     # ── Metrics ──
     lam_peak_nm = data["lam_peak"] * 1e9

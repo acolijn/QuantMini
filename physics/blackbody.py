@@ -27,7 +27,7 @@ def wien_peak(T):
     return 2.898e-3 / T
 
 
-def compute(T):
+def compute(T, noise=0.05):
     """Return wavelength array and spectral radiance curves."""
     lam_peak = wien_peak(T)
     lam_start = max(50e-9, lam_peak * 0.05)
@@ -38,9 +38,9 @@ def compute(T):
     I_rj     = rayleigh_jeans(lam, T)
 
     # Fake measurement points: Planck + ~5% scatter, sparse over the main curve
-    rng = np.random.default_rng(seed=42)
+    rng = np.random.default_rng()
     lam_meas = np.linspace(lam_start, lam_end, 40)
-    I_meas   = planck(lam_meas, T) * (1 + rng.normal(0, 0.05, len(lam_meas)))
+    I_meas   = planck(lam_meas, T) * (1 + rng.normal(0, noise, len(lam_meas)))
 
     power = SIGMA * T**4  # total emitted power per unit surface [W/m²]
 
