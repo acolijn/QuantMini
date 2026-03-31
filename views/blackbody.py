@@ -75,7 +75,14 @@ def render():
             st.markdown(
                 "De golflengte waarop de straling maximaal is, verschuift met temperatuur:"
             )
-            st.latex(r"\lambda_{\rm max} = \frac{b}{T}, \quad b = 2{,}898 \times 10^{-3}\ \text{m K}")
+            st.latex(
+                r"\lambda_{\rm max} = \frac{b}{T},"
+                r"\quad b = \frac{hc}{k_B\, x_0} \approx 2{,}898 \times 10^{-3}\ \text{m K}"
+            )
+            st.markdown(
+                r"waarbij $x_0 \approx 4{,}965$ de oplossing is van "
+                r"$\displaystyle x\,\frac{e^x}{e^x-1}=5$."
+            )
             st.markdown(f"Bij **T = {T} K**: $\\lambda_{{\\rm max}} = {lam_peak_nm:.0f}$ nm")
 
             st.markdown("### Wet van Stefan-Boltzmann")
@@ -98,5 +105,5 @@ def render():
                 f"| Planckconstante $h$ | $6.626 \\times 10^{{-34}}$ J·s |\n"
                 f"| Boltzmannnconstante $k_B$ | $1.381 \\times 10^{{-23}}$ J/K |\n"
                 f"| Lichtsnelheid $c$ | $2.998 \\times 10^8$ m/s |\n"
-                f"| Wienconstante $b$ | $2.898 \\times 10^{{-3}}$ m·K |"
+                f"| Wienconstante $b = hc/(k_B x_0)$ | $2.898 \\times 10^{{-3}}$ m·K |"
             )

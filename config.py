@@ -1,8 +1,15 @@
 """Shared physical constants, material data, and plot style."""
 
-H = 6.626e-34   # Planck constant (J s)
-E = 1.602e-19   # Elementary charge (C)
-C = 2.998e8     # Speed of light (m/s)
+H     = 6.626e-34   # Planck constant (J s)
+E     = 1.602e-19   # Elementary charge (C)
+C     = 2.998e8     # Speed of light (m/s)
+KB    = 1.381e-23   # Boltzmann constant (J/K)
+SIGMA = 5.670e-8    # Stefan-Boltzmann constant (W/(m² K⁴))
+
+# Wien displacement constant: b = h·c / (k_B · x0)
+# where x0 ≈ 4.9651 solves  x·eˣ/(eˣ−1) = 5
+_WIEN_X0 = 4.965114231744276
+WIEN_B   = H * C / (KB * _WIEN_X0)   # ≈ 2.898e-3 m·K
 
 # Shared plot style
 FIGSIZE_WIDE   = (10, 5)   # standard data plots

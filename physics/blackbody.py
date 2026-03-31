@@ -3,13 +3,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-from config import FIGSIZE_WIDE, LABEL_FONTSIZE, TITLE_FONTSIZE, LEGEND_FONTSIZE, GRID_ALPHA
-
-# Physical constants
-H     = 6.626e-34   # J s
-C     = 2.998e8     # m/s
-KB    = 1.381e-23   # J/K
-SIGMA = 5.670e-8    # W/(m² K⁴)  Stefan-Boltzmann
+from config import H, C, KB, SIGMA, WIEN_B, FIGSIZE_WIDE, LABEL_FONTSIZE, TITLE_FONTSIZE, LEGEND_FONTSIZE, GRID_ALPHA
 
 
 def planck(lam, T):
@@ -24,7 +18,7 @@ def rayleigh_jeans(lam, T):
 
 def wien_peak(T):
     """Wavelength of peak emission [m] via Wien's law."""
-    return 2.898e-3 / T
+    return WIEN_B / T
 
 
 def compute(T, noise=0.05):
