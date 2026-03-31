@@ -98,9 +98,6 @@ def plot_spectrum(data, show_rj=True, show_meas=True, log_scale=False):
     # Wien peak annotation
     y_top = 1.3 * d["I_planck"].max() / 1e12
     ax.axvline(peak_disp, color="goldenrod", lw=1, ls=":", alpha=0.8)
-    offset = peak_disp * 0.03
-    ax.text(peak_disp + offset, y_top * 0.92,
-            f"  $\lambda_{{\\rm max}}$ = {peak_disp:.1f} {unit}", fontsize=9, color="black", va="top")
 
     extra_handles = []
 
