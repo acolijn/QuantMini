@@ -33,4 +33,4 @@ This is a Streamlit + matplotlib physics education app demonstrating quantum mec
 
 ## Maintaining README.md
 - Update `README.md` whenever a new experiment is added, a significant feature changes, or new sliders/toggles are introduced
-- Keep the experiment descriptions in sync with the actual UI labels (Dutch)
+- Keep the experiment descriptions in sync with the actual UI labels (Dutch) 
