@@ -51,7 +51,7 @@ def compute(T):
     )
 
 
-def plot_spectrum(data, show_rj=True, show_meas=True):
+def plot_spectrum(data, show_rj=True, show_meas=True, log_scale=False):
     """Plot Planck spectrum, Rayleigh-Jeans, and fake measurement points."""
     d = data
     lam_peak_m = d["lam_peak"]  # metres
@@ -118,7 +118,11 @@ def plot_spectrum(data, show_rj=True, show_meas=True):
     ax.set_title(f"T = {data['T']} K",
                  fontsize=TITLE_FONTSIZE)
     ax.set_xlim(lam_disp[0], lam_disp[-1])
-    ax.set_ylim(0, y_top)
+    if log_scale:
+        ax.set_yscale("log")
+        ax.set_ylim(bottom=max(d["I_planck"].max() / 1e12 * 1e-6, 1e-10))
+    else:
+        ax.set_ylim(0, y_top)
     handles, labels = ax.get_legend_handles_labels()
     ax.legend(handles + extra_handles, [l for l in labels] + [h.get_label() for h in extra_handles], fontsize=LEGEND_FONTSIZE)
     ax.grid(alpha=GRID_ALPHA)

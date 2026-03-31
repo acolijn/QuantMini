@@ -18,6 +18,7 @@ def render():
     st.sidebar.subheader("🎛️ Weergave")
     show_rj   = st.sidebar.toggle("Toon Rayleigh-Jeans (klassiek)", value=True)
     show_meas = st.sidebar.toggle("Toon meetpunten", value=True)
+    log_scale = st.sidebar.toggle("Log schaal (y-as)", value=False)
 
     # ── Compute ──
     data = bb.compute(T)
@@ -39,7 +40,7 @@ def render():
     tab1, tab2 = st.tabs(["📈 Spectrum", "📖 Theorie"])
 
     with tab1:
-        fig = bb.plot_spectrum(data, show_rj=show_rj, show_meas=show_meas)
+        fig = bb.plot_spectrum(data, show_rj=show_rj, show_meas=show_meas, log_scale=log_scale)
         st.pyplot(fig)
         plt.close(fig)
 
