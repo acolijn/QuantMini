@@ -2,6 +2,7 @@
 
 import numpy as np
 import matplotlib.pyplot as plt
+from matplotlib.colors import LinearSegmentedColormap
 from scipy.stats import linregress
 
 from config import H, E, METALS, METAL_COLORS, FIGSIZE_WIDE, LABEL_FONTSIZE, TITLE_FONTSIZE, LEGEND_FONTSIZE, GRID_ALPHA
@@ -104,9 +105,25 @@ def plot_metals():
 
     fig, ax = plt.subplots(figsize=FIGSIZE_WIDE)
     ax.axhline(y=0, color="black", lw=1)
-    ax.axvspan(4.0e14, 7.9e14, alpha=0.07, color="gold")
-    ax.text(5.95e14, 3.3, "Zichtbaar licht",
-            ha="center", fontsize=9, color="goldenrod", style="italic")
+
+    # Rainbow visible-light band (380–700 nm → 4.28e14–7.89e14 Hz)
+    rainbow_colors = [
+        (0.45, 0.0,  0.75),  # violet
+        (0.0,  0.0,  1.0),   # blue
+        (0.0,  0.8,  0.8),   # cyan
+        (0.0,  0.8,  0.0),   # green
+        (1.0,  1.0,  0.0),   # yellow
+        (1.0,  0.5,  0.0),   # orange
+        (1.0,  0.0,  0.0),   # red
+    ]
+    rainbow_cmap = LinearSegmentedColormap.from_list("rainbow_vis", rainbow_colors)
+    nu_vis_lo, nu_vis_hi = 4.28e14, 7.89e14
+    rainbow_img = np.linspace(0, 1, 256).reshape(1, -1)
+    ax.imshow(
+        rainbow_img, cmap=rainbow_cmap, aspect="auto", alpha=0.22,
+        extent=[nu_vis_lo, nu_vis_hi, -0.1, 3.7],
+        origin="lower", zorder=0,
+    )
 
     for naam, W_eV in METALS.items():
         nu_c = W_eV * E / H
