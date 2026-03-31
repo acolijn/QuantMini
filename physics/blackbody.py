@@ -71,9 +71,10 @@ def plot_spectrum(data, show_rj=True, show_meas=True, log_scale=False):
     ax.plot(lam_disp, d["I_planck"] / 1e12,
             color="firebrick", lw=2.5, label="Planck (kwantum)", zorder=3)
 
-    # Rayleigh-Jeans — clamp to avoid huge values at short wavelengths
-    I_rj_plot = np.where(d["I_rj"] < 5 * d["I_planck"].max(), d["I_rj"], np.nan)
+    # Rayleigh-Jeans — clamp only in linear mode to avoid huge values
     if show_rj:
+        I_rj_plot = d["I_rj"] if log_scale else np.where(
+            d["I_rj"] < 5 * d["I_planck"].max(), d["I_rj"], np.nan)
         ax.plot(lam_disp, I_rj_plot / 1e12,
                 color="steelblue", lw=2, ls="--",
                 label="Rayleigh-Jeans (klassiek)", zorder=2)
@@ -90,7 +91,21 @@ def plot_spectrum(data, show_rj=True, show_meas=True, log_scale=False):
     ax.text(peak_disp + offset, y_top * 0.92,
             f"  $\lambda_{{\\rm max}}$ = {peak_disp:.1f} {unit}", fontsize=9, color="black", va="top")
 
+    extra_handles = []
+
+    ax.set_xlabel(f"Golflengte λ ({unit})", fontsize=LABEL_FONTSIZE)
+    ax.set_ylabel("Spectrale straling (TW/m²/sr/m)", fontsize=LABEL_FONTSIZE)
+    ax.set_title(f"T = {data['T']} K",
+                 fontsize=TITLE_FONTSIZE)
+    ax.set_xlim(lam_disp[0], lam_disp[-1])
+    if log_scale:
+        ax.set_yscale("log")
+        ax.set_ylim(bottom=max(d["I_planck"].max() / 1e12 * 1e-6, 1e-10), top=y_top)
+    else:
+        ax.set_ylim(0, y_top)
+
     # Visible light band — rainbow, only relevant in nm mode (380–700 nm)
+    # Drawn after ylim is set so extent matches actual axis range
     if not use_um:
         from matplotlib.colors import LinearSegmentedColormap
         rainbow_colors = [
@@ -105,24 +120,12 @@ def plot_spectrum(data, show_rj=True, show_meas=True, log_scale=False):
         ]
         rainbow_cmap = LinearSegmentedColormap.from_list("vis", rainbow_colors)
         gradient = np.linspace(0, 1, 256).reshape(1, -1)
+        y_lo, y_hi = ax.get_ylim()
         ax.imshow(
             gradient, aspect="auto", cmap=rainbow_cmap, alpha=0.25,
-            extent=[380, 700, 0, y_top], zorder=1
+            extent=[380, 700, y_lo, y_hi], zorder=1
         )
-
-        
-    extra_handles = []
-
-    ax.set_xlabel(f"Golflengte λ ({unit})", fontsize=LABEL_FONTSIZE)
-    ax.set_ylabel("Spectrale straling (TW/m²/sr/m)", fontsize=LABEL_FONTSIZE)
-    ax.set_title(f"T = {data['T']} K",
-                 fontsize=TITLE_FONTSIZE)
-    ax.set_xlim(lam_disp[0], lam_disp[-1])
-    if log_scale:
-        ax.set_yscale("log")
-        ax.set_ylim(bottom=max(d["I_planck"].max() / 1e12 * 1e-6, 1e-10))
-    else:
-        ax.set_ylim(0, y_top)
+        ax.set_ylim(y_lo, y_hi)  # imshow can reset ylim; restore it
     handles, labels = ax.get_legend_handles_labels()
     ax.legend(handles + extra_handles, [l for l in labels] + [h.get_label() for h in extra_handles], fontsize=LEGEND_FONTSIZE)
     ax.grid(alpha=GRID_ALPHA)
