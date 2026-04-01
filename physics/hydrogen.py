@@ -218,6 +218,9 @@ def plot_orbital_3d(data, iso_level=0.15, cross_res=150,
 
 def plot_orbital_2d(data, res=150):
     """Side-by-side 2D cross-sections: xz-plane (y=0) and xy-plane (z=0)."""
+    from matplotlib.colors import PowerNorm
+    from mpl_toolkits.axes_grid1 import ImageGrid
+
     r_max_A = data["r_max"] * 1e10
     n, l, m = data["n"], data["l"], data["m"]
     global_peak = data["psi2_raw_peak"]
@@ -234,12 +237,25 @@ def plot_orbital_2d(data, res=150):
 
     coords = np.linspace(-r_max_A, r_max_A, res)
 
-    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(10, 5))
+    # sqrt normalisation: compresses the bright peak, opens up shell structure
+    norm = PowerNorm(gamma=0.5, vmin=0, vmax=1)
+
+    fig = plt.figure(figsize=(12, 6))
+    grid = ImageGrid(
+        fig, 111,
+        nrows_ncols=(1, 2),
+        axes_pad=0.5,
+        cbar_location="right",
+        cbar_mode="single",
+        cbar_size="3%",
+        cbar_pad=0.1,
+    )
+    ax1, ax2 = grid[0], grid[1]
 
     # xz-plane (y = 0) ── z on vertical axis
     im1 = ax1.imshow(
         psi_xz, origin="lower", extent=extent,
-        cmap="hot", aspect="equal", vmin=0, vmax=1,
+        cmap="hot", aspect="equal", norm=norm,
     )
     ax1.contour(
         coords, coords,
@@ -248,12 +264,11 @@ def plot_orbital_2d(data, res=150):
     ax1.set_title(f"xz-vlak  (y=0)  —  {name}", fontsize=TITLE_FONTSIZE - 1)
     ax1.set_xlabel(r"x ($\AA$)", fontsize=LABEL_FONTSIZE)
     ax1.set_ylabel(r"z ($\AA$)", fontsize=LABEL_FONTSIZE)
-    fig.colorbar(im1, ax=ax1, label=r"$|\psi|^2$")
 
     # xy-plane (z = 0) ── y on vertical axis
     im2 = ax2.imshow(
         psi_xy, origin="lower", extent=extent,
-        cmap="hot", aspect="equal", vmin=0, vmax=1,
+        cmap="hot", aspect="equal", norm=norm,
     )
     ax2.contour(
         coords, coords,
@@ -262,7 +277,9 @@ def plot_orbital_2d(data, res=150):
     ax2.set_title(f"xy-vlak  (z=0)  —  {name}", fontsize=TITLE_FONTSIZE - 1)
     ax2.set_xlabel(r"x ($\AA$)", fontsize=LABEL_FONTSIZE)
     ax2.set_ylabel(r"y ($\AA$)", fontsize=LABEL_FONTSIZE)
-    fig.colorbar(im2, ax=ax2, label=r"$|\psi|^2$")
+
+    # Single shared colorbar — height locked to the image axes by ImageGrid
+    grid.cbar_axes[0].colorbar(im1, label=r"$|\psi|^2$")
 
     try:
         fig.tight_layout()
