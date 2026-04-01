@@ -32,6 +32,27 @@ def render():
         "\U0001f4d6 Theorie",
     ])
 
+    with tab1:
+        sch_l, sch_r = st.columns(2)
+        with sch_l:
+            fig_s0 = ds.plot_schema(data, d, lam, L, a, waarneming=False)
+            st.pyplot(fig_s0, use_container_width=False)
+            plt.close(fig_s0)
+        with sch_r:
+            fig_s1 = ds.plot_schema(data, d, lam, L, a, waarneming=True)
+            st.pyplot(fig_s1, use_container_width=False)
+            plt.close(fig_s1)
+
+        fig_i = ds.plot_intensity(data, False)
+        st.pyplot(fig_i)
+        plt.close(fig_i)
+
+        c1, c2, c3 = st.columns(3)
+#        c1.metric("Fringe-afstand \u0394y", f"{data['dy_fringe'] * 1e3:.3f} mm")
+        c1.metric("Fringe-afstand $\Delta y$", f"{data['dy_fringe'] * 1e3:.3f} mm")
+        c2.metric("Golflengte \u03bb", f"{lam_nm} nm")
+        c3.metric("Spleetafstand d", f"{d_mm} mm")
+
     with tab2:
         col_l, col_r = st.columns([1, 1])
         with col_l:
@@ -93,23 +114,4 @@ def render():
 | Fringe-afstand $\\Delta y$ | {data['dy_fringe']*1e3:.3f} mm |
             """)
 
-    with tab1:
-        sch_l, sch_r = st.columns(2)
-        with sch_l:
-            fig_s0 = ds.plot_schema(data, d, lam, L, a, waarneming=False)
-            st.pyplot(fig_s0, use_container_width=False)
-            plt.close(fig_s0)
-        with sch_r:
-            fig_s1 = ds.plot_schema(data, d, lam, L, a, waarneming=True)
-            st.pyplot(fig_s1, use_container_width=False)
-            plt.close(fig_s1)
 
-        fig_i = ds.plot_intensity(data, False)
-        st.pyplot(fig_i)
-        plt.close(fig_i)
-
-        c1, c2, c3 = st.columns(3)
-#        c1.metric("Fringe-afstand \u0394y", f"{data['dy_fringe'] * 1e3:.3f} mm")
-        c1.metric("Fringe-afstand $\Delta y$", f"{data['dy_fringe'] * 1e3:.3f} mm")
-        c2.metric("Golflengte \u03bb", f"{lam_nm} nm")
-        c3.metric("Spleetafstand d", f"{d_mm} mm")
