@@ -8,6 +8,12 @@ from physics import hydrogen as hy
 _ORBITAL_NAMES = {0: "s", 1: "p", 2: "d", 3: "f", 4: "g", 5: "h"}
 
 
+@st.cache_data(max_entries=20)
+def _cached_compute(n, l, m):
+    """Wrapper so the 3D grid is only recomputed when n/l/m changes."""
+    return hy.compute(n, l, m, resolution=50)
+
+
 def render():
     st.title("Waterstof-orbitalen")
 
@@ -51,7 +57,7 @@ def render():
     st.sidebar.markdown("---")
     st.sidebar.subheader("⚙️ 3D Kwaliteit")
     cross_res = st.sidebar.slider(
-        "Doorsnede resolutie", min_value=50, max_value=500, value=250, step=10
+        "Doorsnede resolutie", min_value=50, max_value=300, value=150, step=10
     )
     iso_level = st.sidebar.slider(
         "Isovlak drempel (%)", 1, 50, 15, 1
@@ -72,7 +78,7 @@ def render():
 
     # ── Compute ───────────────────────────────────────────────────────────
     with st.spinner("Golffunctie berekenen…"):
-        data = hy.compute(n, l, m, resolution=50)
+        data = _cached_compute(n, l, m)
 
     # ── Tabs ──────────────────────────────────────────────────────────────
     tab1, tab2, tab3 = st.tabs([

@@ -17,4 +17,5 @@ ENTRYPOINT ["streamlit", "run", "app.py", \
     "--server.headless=true", \
     "--browser.gatherUsageStats=false", \
     "--server.enableCORS=false", \
-    "--server.enableXsrfProtection=false"]
+    "--server.enableXsrfProtection=false", \
+    "--server.baseUrlPath=quantmini"]

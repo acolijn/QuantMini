@@ -66,22 +66,22 @@ def compute(n, l, m, resolution=45):
         n, l, m      — quantum numbers
     """
     r_max = A0 * n * n * 5.0
-    coords = np.linspace(-r_max, r_max, resolution)
+    coords = np.linspace(-r_max, r_max, resolution, dtype=np.float32)
     X, Y, Z = np.meshgrid(coords, coords, coords, indexing="ij")
 
     r = np.sqrt(X**2 + Y**2 + Z**2)
-    r_safe = np.where(r < 1e-15, 1e-15, r)
+    r_safe = np.where(r < 1e-15, np.float32(1e-15), r)
 
-    theta = np.arccos(np.clip(Z / r_safe, -1.0, 1.0))  # polar   [0, π]
-    phi   = np.arctan2(Y, X)                             # azimuth [−π, π]
+    theta = np.arccos(np.clip(Z / r_safe, np.float32(-1.0), np.float32(1.0)))
+    phi   = np.arctan2(Y, X)
 
     R_nl = _radial(n, l, r_safe)
     Y_lm = _sph_harm(m, l, phi, theta)
 
-    psi2 = np.abs(R_nl * Y_lm) ** 2
-    peak = psi2.max()
+    psi2 = (np.abs(R_nl * Y_lm) ** 2).astype(np.float32)
+    peak = float(psi2.max())
     if peak > 0:
-        psi2 = psi2 / peak
+        psi2 = psi2 / np.float32(peak)
 
     return dict(X=X, Y=Y, Z=Z, psi2=psi2, psi2_raw_peak=peak,
                 r_max=r_max, n=n, l=l, m=m)
@@ -101,9 +101,9 @@ def _psi2_on_plane(n, l, m, r_max_m, res, fixed_axis, fixed_val_m, global_peak):
 
     Returns X, Y, Z (shape res×res, in Ångström) and P (normalised [0,1]).
     """
-    coords = np.linspace(-r_max_m, r_max_m, res)
+    coords = np.linspace(-r_max_m, r_max_m, res, dtype=np.float32)
     A, B   = np.meshgrid(coords, coords, indexing="ij")
-    C      = np.full_like(A, fixed_val_m)
+    C      = np.full_like(A, np.float32(fixed_val_m))
 
     if fixed_axis == "z":
         Xm, Ym, Zm = A, B, C
@@ -149,7 +149,7 @@ def plot_orbital_3d(data, iso_level=0.15, cross_res=150,
     raw_peak = data["psi2_raw_peak"]
 
     # ── Ghost isosurface (full mesh, very low opacity) ─────────────────────
-    target  = 120
+    target  = 80
     zoom_f  = target / N
     psi2_mc = np.clip(nd_zoom(psi2, zoom_f, order=3), 0.0, 1.0) if zoom_f > 1.05 else psi2
     N_mc    = psi2_mc.shape[0]
@@ -246,8 +246,8 @@ def plot_orbital_2d(data, res=150):
         psi_xz, levels=7, colors="white", alpha=0.35, linewidths=0.6,
     )
     ax1.set_title(f"xz-vlak  (y=0)  —  {name}", fontsize=TITLE_FONTSIZE - 1)
-    ax1.set_xlabel("x ($\AA$)", fontsize=LABEL_FONTSIZE)
-    ax1.set_ylabel("z ($\AA$)", fontsize=LABEL_FONTSIZE)
+    ax1.set_xlabel(r"x ($\AA$)", fontsize=LABEL_FONTSIZE)
+    ax1.set_ylabel(r"z ($\AA$)", fontsize=LABEL_FONTSIZE)
     fig.colorbar(im1, ax=ax1, label=r"$|\psi|^2$")
 
     # xy-plane (z = 0) ── y on vertical axis
@@ -260,8 +260,8 @@ def plot_orbital_2d(data, res=150):
         psi_xy, levels=7, colors="white", alpha=0.35, linewidths=0.6,
     )
     ax2.set_title(f"xy-vlak  (z=0)  —  {name}", fontsize=TITLE_FONTSIZE - 1)
-    ax2.set_xlabel("x ($\AA$)", fontsize=LABEL_FONTSIZE)
-    ax2.set_ylabel("y ($\AA$)", fontsize=LABEL_FONTSIZE)
+    ax2.set_xlabel(r"x ($\AA$)", fontsize=LABEL_FONTSIZE)
+    ax2.set_ylabel(r"y ($\AA$)", fontsize=LABEL_FONTSIZE)
     fig.colorbar(im2, ax=ax2, label=r"$|\psi|^2$")
 
     try:
