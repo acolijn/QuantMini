@@ -19,7 +19,12 @@ div[data-testid="stMetricLabel"] { font-size: 11px !important; }
 st.sidebar.title("\u269b\ufe0f Kwantumfysica")
 page = st.sidebar.radio(
     "Kies een experiment",
-    ["Foto-elektrisch effect", "Dubbele-spleet experiment", "Zwarte-lichaamsstraling"],
+    [
+        "Foto-elektrisch effect",
+        "Dubbele-spleet experiment",
+        "Zwarte-lichaamsstraling",
+        "Waterstof-orbitalen",
+    ],
 )
 
 # ── Page routing ──────────────────────────────────────────────────────────────
@@ -28,6 +33,9 @@ if page == "Foto-elektrisch effect":
     render()
 elif page == "Dubbele-spleet experiment":
     from views.double_slit import render
+    render()
+elif page == "Waterstof-orbitalen":
+    from views.hydrogen import render
     render()
 else:
     from views.blackbody import render

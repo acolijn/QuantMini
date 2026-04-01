@@ -5,6 +5,7 @@ E     = 1.602e-19   # Elementary charge (C)
 C     = 2.998e8     # Speed of light (m/s)
 KB    = 1.381e-23   # Boltzmann constant (J/K)
 SIGMA = 5.670e-8    # Stefan-Boltzmann constant (W/(m² K⁴))
+A0    = 5.292e-11   # Bohr radius (m)
 
 # Wien displacement constant: b = h·c / (k_B · x0)
 # where x0 ≈ 4.9651 solves  x·eˣ/(eˣ−1) = 5
