@@ -11,7 +11,7 @@ _ORBITAL_NAMES = {0: "s", 1: "p", 2: "d", 3: "f", 4: "g", 5: "h"}
 
 @st.fragment
 def _orbital_3d_tab(data, n, iso_level, cross_res):
-    """Fragment: plane-type radio + 3D chart rendered via components.html.
+    """Fragment: plane-type radio + 3D chart rendered via components.html. 
 
     The plane position slider is a plain HTML range input wired to Plotly.js
     via JavaScript.  Camera save/restore happens in JS after every restyle,
