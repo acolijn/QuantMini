@@ -65,7 +65,7 @@ def compute(n, l, m, resolution=45):
         r_max        — grid half-extent in metres
         n, l, m      — quantum numbers
     """
-    r_max = A0 * n * n * 5.0
+    r_max = max(A0 * n * n * 3.0, A0 * 4.0)
     coords = np.linspace(-r_max, r_max, resolution, dtype=np.float32)
     X, Y, Z = np.meshgrid(coords, coords, coords, indexing="ij")
 
@@ -125,16 +125,15 @@ def _psi2_on_plane(n, l, m, r_max_m, res, fixed_axis, fixed_val_m, global_peak):
 
 def plot_orbital_3d(data, iso_level=0.15, cross_res=150,
                     fixed_axis="z", plane_pos_A=0.0):
-    """Interactive Plotly 3D figure: ghost isosurface + draggable cutting plane.
+    """Plotly 3D figure: ghost isosurface + one cutting plane.
 
-    The full isosurface is rendered at very low opacity (ghost/outline) so
-    the cutting plane density map is always clearly visible through it.
-    Rotate with mouse-drag, zoom with scroll wheel.
+    The plane slider is handled client-side in the view (components.html)
+    so camera/zoom is preserved across plane movements.
 
     Parameters
     ----------
     fixed_axis  : 'z' for horizontal XY plane, 'y' for vertical XZ plane
-    plane_pos_A : plane position in Ångström
+    plane_pos_A : initial plane position in Ångström
     cross_res   : number of grid points per axis on the cutting plane
     """
     import plotly.graph_objects as go
@@ -148,7 +147,7 @@ def plot_orbital_3d(data, iso_level=0.15, cross_res=150,
     N        = psi2.shape[0]
     raw_peak = data["psi2_raw_peak"]
 
-    # ── Ghost isosurface (full mesh, very low opacity) ─────────────────────
+    # ── Ghost isosurface ──────────────────────────────────────────────────
     target  = 80
     zoom_f  = target / N
     psi2_mc = np.clip(nd_zoom(psi2, zoom_f, order=3), 0.0, 1.0) if zoom_f > 1.05 else psi2
@@ -163,50 +162,44 @@ def plot_orbital_3d(data, iso_level=0.15, cross_res=150,
         traces.append(go.Mesh3d(
             x=verts[:, 0], y=verts[:, 1], z=verts[:, 2],
             i=faces[:, 0], j=faces[:, 1], k=faces[:, 2],
-            color="steelblue",
-            opacity=0.20,                    # ghost — visible but doesn't obscure plane
-            showscale=False,
-            hoverinfo="skip",
-            name="Isovlak",
+            color="steelblue", opacity=0.20,
+            showscale=False, hoverinfo="skip", name="Isovlak",
         ))
     except (ValueError, RuntimeError):
         pass
 
-    # ── Analytical cutting plane ───────────────────────────────────────────
-    plane_pos_m = plane_pos_A * 1e-10
-    Xp, Yp, Zp, P = _psi2_on_plane(n, l, m, r_max_m, cross_res,
-                                    fixed_axis, plane_pos_m, raw_peak)
-    # Show full colormap: zero density → black (low end of "hot"), no transparency
-
+    # ── Initial cutting plane ─────────────────────────────────────────────
+    Xp, Yp, Zp, P = _psi2_on_plane(
+        n, l, m, r_max_m, cross_res, fixed_axis, plane_pos_A * 1e-10, raw_peak
+    )
     traces.append(go.Surface(
-        x=Xp, y=Yp, z=Zp,
-        surfacecolor=P,
-        colorscale="Hot",
-        cmin=0, cmax=1,
-        showscale=True,
-        colorbar=dict(title="|ψ|²", len=0.5, x=0.92),
-        opacity=1.0,
-        hoverinfo="skip",
+        x=Xp, y=Yp, z=Zp, surfacecolor=P,
+        colorscale="Hot", cmin=0, cmax=1,
+        showscale=True, colorbar=dict(title="|ψ|²", len=0.5, x=0.92),
+        opacity=1.0, hoverinfo="skip",
+        contours=dict(
+            x=dict(highlight=False),
+            y=dict(highlight=False),
+            z=dict(highlight=False),
+        ),
         name="Snijvlak",
     ))
 
-    # ── Layout ─────────────────────────────────────────────────────────────
-    name     = f"{n}{_ORBITAL_NAMES.get(l, str(l))}"
-    ax_label = "z" if fixed_axis == "z" else "y"
-    plane_lbl = f"XY  (z = {plane_pos_A:.1f} Å)" if fixed_axis == "z" \
-                else f"XZ  (y = {plane_pos_A:.1f} Å)"
+    orbital_name = f"{n}{_ORBITAL_NAMES.get(l, str(l))}"
+    ax_char = "z" if fixed_axis == "z" else "y"
+    plane_lbl = (f"XY  ({ax_char} = {plane_pos_A:.1f} Å)"
+                 if fixed_axis == "z" else f"XZ  ({ax_char} = {plane_pos_A:.1f} Å)")
 
     fig = go.Figure(data=traces)
     fig.update_layout(
         scene=dict(
-            xaxis=dict(title="x (Å)", range=[-r_max_A, r_max_A]),
-            yaxis=dict(title="y (Å)", range=[-r_max_A, r_max_A]),
-            zaxis=dict(title="z (Å)", range=[-r_max_A, r_max_A]),
+            xaxis=dict(title="x (Å)", range=[-r_max_A, r_max_A], showspikes=False),
+            yaxis=dict(title="y (Å)", range=[-r_max_A, r_max_A], showspikes=False),
+            zaxis=dict(title="z (Å)", range=[-r_max_A, r_max_A], showspikes=False),
             aspectmode="cube",
-            camera=dict(eye=dict(x=1.6, y=1.6, z=1.0)),
         ),
         title=dict(
-            text=(f"Orbitaal {name}  (n={n}, l={l}, m={m})  —  "
+            text=(f"Orbitaal {orbital_name}  (n={n}, l={l}, m={m})  —  "
                   f"isovlak |ψ|²={level:.2f}  |  snijvlak {plane_lbl}"),
             font=dict(size=TITLE_FONTSIZE),
         ),
@@ -214,6 +207,24 @@ def plot_orbital_3d(data, iso_level=0.15, cross_res=150,
         height=650,
     )
     return fig
+
+
+def compute_plane_slices(data, fixed_axis, positions_A, cross_res=150):
+    """Pre-compute surfacecolor arrays for all plane positions.
+
+    Returns a list of flattened float arrays (values 0-1, rounded to 3 dp),
+    one per position.  The flat ordering matches row-major (C order).
+    """
+    n, l, m  = data["n"], data["l"], data["m"]
+    r_max_m  = data["r_max"]
+    raw_peak = data["psi2_raw_peak"]
+    slices = []
+    for pos_A in positions_A:
+        _, _, _, P = _psi2_on_plane(
+            n, l, m, r_max_m, cross_res, fixed_axis, pos_A * 1e-10, raw_peak
+        )
+        slices.append(np.round(P.astype(np.float32), 3).flatten().tolist())
+    return slices
 
 
 def plot_orbital_2d(data, res=150):
