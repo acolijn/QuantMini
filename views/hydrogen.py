@@ -25,7 +25,7 @@ def _orbital_3d_tab(data, n, iso_level, cross_res):
     plane_type = st.radio(
         "Vlak",
         options=["XY  (horizontaal, z=const)", "XZ  (verticaal, y=const)"],
-        horizontal=True,
+        horizontal=True, 
         label_visibility="collapsed",
     )
     fixed_axis = "z" if plane_type.startswith("XY") else "y"
