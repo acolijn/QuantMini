@@ -8,41 +8,41 @@ An interactive web application for exploring three foundational quantum physics 
 
 ### ⚡ Foto-elektrisch effect
 Simulate Einstein's photoelectric effect:
-- Adjust the **work function** (material) and **light frequency**
-- Observe the stopping voltage and cutoff frequency
-- Simulated measurement points with adjustable noise (Gaussian)
-- Linear fit through measurements to extract Planck's constant
-- **Comparison tab**: all metals side-by-side with a rainbow visible-light band, secondary wavelength axis (λ = c/ν)
+- Select the **material** (work function) via sidebar
+- Toggle **linear fit** and **extrapolation** lines on/off
+- Adjustable **measurement noise**
+- Metric cards: afkapfrequentie (theorie), afkapfrequentie (fit), h uit fit, h (literatuur)
+- **Vergelijking tab**: all metals side-by-side with a rainbow visible-light band, secondary wavelength axis (λ = c/ν)
 - **Theory tab**: Einstein equation, stopping voltage, cutoff frequency, constants table
 
 ### 🌊 Dubbele-spleet experiment
 Explore wave–particle duality:
 - Adjust slit separation **d**, slit width **a**, wavelength **λ**, screen distance **L**
 - Intensity pattern shows **wave interference** (solid) and **classical particle** (dashed) simultaneously
-- Individual single-slit contributions shown as subtle grey dashed lines
 - Δy fringe-spacing arrow annotated above the plot
 - Fixed x-axis ±20 mm for direct visual comparison when parameters change
+- Metric cards: fringe-afstand Δy, golflengte λ, spleetafstand d
 - Schematic diagrams of both situations (with/without which-path observation)
 - **Theory tab**: intensity formula, fringe spacing, de Broglie wavelength, current parameter values
 
 ### 🌡 Zwarte-lichaamsstraling
 Planck vs classical physics:
 - Adjust **temperature** (100 K – 10 000 K)
-- **Planck spectrum** with simulated measurement points and **Poisson error bars**
+- **Planck spectrum** with simulated measurement points and **Poisson error bars**; toggle measurement points on/off
 - **Rayleigh-Jeans** classical approximation overlaid (toggle)
 - Adjustable **measurement noise** (controls effective photon count: σ ∝ √I)
 - Optional **log scale** to dramatically reveal the ultraviolet catastrophe
 - Rainbow visible-light band (380–700 nm), auto-switching between nm and µm axes
-- Wien peak marked with golden dashed line
-- Metric cards: Wien peak wavelength, peak frequency, peak colour temperature, radiated power (Stefan-Boltzmann)
+- Wien peak marked with a dotted line
+- Metric cards: temperatuur, λ_max (Wien), kleur piek (spectral region), uitgestraald vermogen (Stefan-Boltzmann)
 - **Theory tab**: Planck's law, Rayleigh-Jeans, Wien's displacement law, Stefan-Boltzmann law with σ derived from fundamental constants
 
 ### ⚛️ Waterstof-orbitalen
-3-D probability densities of hydrogen atom wave functions:
-- Choose quantum numbers **n** (1–4), **l** (0 … n−1), **m** (−l … +l) via sidebar
-- **3D cutaway view**: the first quadrant (x > 0, y > 0) is removed so the interior is visible; two colour-mapped cross-section faces at x = 0 and y = 0 reveal the inner radial structure
-- Rotate the 3D view by adjusting **elevation** and **azimuth** angles
+3-D probability densities of hydrogen atom wave functions (rendered with Plotly):
+- Choose quantum numbers **n** (1–6), **l** (0 … n−1), **m** (−l … +l) via sidebar
 - Tune the **display threshold** to show more or fewer probability-density voxels
+- Adjust **doorsnede resolutie** (50–300) for sampling resolution of cross-sections
+- **3D tab**: semi-transparent isosurface with an interactive cutting plane (XY or XZ orientation); drag the plane position slider or use the play/pause animation to sweep through the orbital; rotate by mouse-dragging the canvas
 - Metric cards: orbital name (1s, 2p, …), energy level (eV), mean radius (Å), number of radial nodes
 - **Doorsnedes tab**: side-by-side false-colour images of |ψ|² in the xz-plane (y = 0) and xy-plane (z = 0) with white contour lines
 - **Theory tab**: wave function formula, radial part with associated Laguerre polynomials, energy levels, mean radius, radial probability density
@@ -118,3 +118,5 @@ The container runs on port **8502** (mapped to the same port on the host).
 | matplotlib | ≥ 3.10, < 4 |
 | numpy | ≥ 2.2, < 3 |
 | scipy | ≥ 1.15, < 2 |
+| plotly | ≥ 5.0, < 7 |
+| scikit-image | ≥ 0.22, < 2 |
