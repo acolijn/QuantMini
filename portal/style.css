@@ -38,6 +38,34 @@ body {
 .app-link:hover {
     background: #1b2e4b;
 }
+.app-card {
+    margin-bottom: 20px;
+}
+.app-desc {
+    color: #666;
+    font-size: 0.95em;
+    margin: 6px 24px 0 24px;
+    line-height: 1.5;
+}
+.badge-beta {
+    display: inline-block;
+    background: #e8a317;
+    color: #fff;
+    font-size: 0.7em;
+    padding: 2px 8px;
+    border-radius: 4px;
+    vertical-align: middle;
+    margin-left: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+.site-footer {
+    text-align: center;
+    color: #999;
+    font-size: 0.85em;
+    margin-top: 24px;
+    padding-bottom: 32px;
+}
 .relativity {
     border-bottom: 1px solid #e0e6ed;
     padding-bottom: 24px;
